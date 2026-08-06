@@ -1,1 +1,407 @@
-Hello World
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NEWLIFE.007 的个人技术博客，记录 AI、大模型、推荐系统与广告技术的系统化学习笔记。" />
+  <meta name="theme-color" content="#080b16" />
+  <title>NEWLIFE.007 · 思考正在发生</title>
+  <style>
+    :root {
+      --bg: #080b16;
+      --bg-soft: #0f1425;
+      --surface: rgba(18, 24, 45, 0.66);
+      --surface-strong: rgba(21, 29, 54, 0.9);
+      --text: #f5f7ff;
+      --muted: #aab4d2;
+      --line: rgba(190, 204, 255, 0.15);
+      --cyan: #59e8ff;
+      --violet: #a98bff;
+      --pink: #ff82cb;
+      --lime: #c4ff72;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 7%, rgba(89, 232, 255, 0.13), transparent 26rem),
+        radial-gradient(circle at 94% 30%, rgba(169, 139, 255, 0.15), transparent 31rem),
+        radial-gradient(circle at 53% 88%, rgba(255, 130, 203, 0.08), transparent 32rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      line-height: 1.6;
+    }
+
+    body::before {
+      position: fixed;
+      z-index: -3;
+      inset: 0;
+      pointer-events: none;
+      content: "";
+      opacity: 0.38;
+      background-image: linear-gradient(rgba(151, 173, 255, 0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(151, 173, 255, 0.07) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, black, transparent 82%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
+    .skip-link { position: absolute; left: 1rem; top: -5rem; z-index: 50; padding: 0.7rem 1rem; border-radius: 0.5rem; color: #07111b; background: var(--cyan); }
+    .skip-link:focus { top: 1rem; }
+    .shell { width: min(calc(100% - 2.5rem), var(--max)); margin-inline: auto; }
+
+    .site-header {
+      position: sticky;
+      z-index: 20;
+      top: 0;
+      border-bottom: 1px solid transparent;
+      backdrop-filter: blur(0px);
+      transition: border-color 180ms ease, background 180ms ease, backdrop-filter 180ms ease;
+    }
+    .site-header.scrolled { border-color: var(--line); background: rgba(8, 11, 22, 0.72); backdrop-filter: blur(18px); }
+    .nav { display: flex; align-items: center; justify-content: space-between; min-height: 76px; gap: 1.5rem; }
+    .brand { display: inline-flex; align-items: center; gap: 0.7rem; letter-spacing: 0.08em; font-weight: 800; font-size: 0.9rem; }
+    .brand-mark { display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid rgba(89, 232, 255, 0.6); border-radius: 7px; color: var(--cyan); box-shadow: 0 0 24px rgba(89, 232, 255, 0.2); font-size: 0.85rem; }
+    .nav-links { display: flex; align-items: center; gap: 1.65rem; color: var(--muted); font-size: 0.9rem; }
+    .nav-links a { transition: color 160ms ease; }
+    .nav-links a:hover, .nav-links a:focus-visible { color: var(--text); }
+    .menu-toggle { display: none; border: 1px solid var(--line); border-radius: 0.65rem; padding: 0.45rem 0.65rem; color: var(--text); background: transparent; cursor: pointer; }
+
+    .hero { position: relative; display: grid; min-height: min(770px, calc(100vh - 76px)); align-items: center; padding: 4.2rem 0 5rem; isolation: isolate; }
+    .hero-copy { max-width: 850px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 0.6rem; margin: 0 0 1.5rem; color: var(--cyan); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; }
+    .pulse { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 0 rgba(196, 255, 114, 0.65); animation: pulse 1.7s infinite; }
+    h1 { max-width: 950px; margin: 0; font-size: clamp(3.25rem, 9vw, 8rem); letter-spacing: -0.078em; line-height: 0.9; font-weight: 850; }
+    .gradient-text { display: inline-block; padding-right: 0.07em; color: transparent; background: linear-gradient(115deg, var(--cyan) 5%, #dae4ff 45%, var(--violet) 80%, var(--pink)); background-clip: text; -webkit-background-clip: text; }
+    .hero-text { max-width: 550px; margin: 2rem 0 0; color: var(--muted); font-size: clamp(1rem, 1.8vw, 1.17rem); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 2.3rem; }
+    .button { display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; min-height: 48px; padding: 0.75rem 1.1rem; border: 1px solid var(--line); border-radius: 0.8rem; font-weight: 700; font-size: 0.92rem; transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease; }
+    .button:hover { transform: translateY(-3px); }
+    .button-primary { border-color: transparent; color: #07111b; background: linear-gradient(120deg, var(--cyan), #b6e5ff); box-shadow: 0 12px 35px rgba(89, 232, 255, 0.2); }
+    .button-primary:hover { box-shadow: 0 16px 42px rgba(89, 232, 255, 0.32); }
+    .button-secondary { background: rgba(255, 255, 255, 0.04); }
+    .button-secondary:hover { border-color: rgba(169, 139, 255, 0.65); background: rgba(169, 139, 255, 0.12); }
+
+    .orbit { position: absolute; z-index: -1; width: min(57vw, 670px); aspect-ratio: 1; right: -9vw; top: 9%; border: 1px solid rgba(136, 158, 255, 0.16); border-radius: 50%; box-shadow: inset 0 0 95px rgba(115, 125, 255, 0.1), 0 0 100px rgba(115, 125, 255, 0.08); animation: float 7s ease-in-out infinite; }
+    .orbit::before, .orbit::after { position: absolute; border: 1px solid rgba(89, 232, 255, 0.17); border-radius: inherit; content: ""; }
+    .orbit::before { inset: 12%; }
+    .orbit::after { inset: 29%; border-color: rgba(255, 130, 203, 0.25); }
+    .orb { position: absolute; border-radius: 50%; filter: blur(2px); }
+    .orb-one { width: 19px; height: 19px; top: 10%; left: 17%; background: var(--cyan); box-shadow: 0 0 38px 13px rgba(89, 232, 255, 0.7); }
+    .orb-two { width: 14px; height: 14px; bottom: 10%; right: 18%; background: var(--pink); box-shadow: 0 0 38px 15px rgba(255, 130, 203, 0.55); }
+    .code-card { position: absolute; right: max(2vw, 1rem); bottom: 8%; width: min(300px, 39vw); padding: 1rem 1.15rem; border: 1px solid rgba(185, 201, 255, 0.2); border-radius: 1rem; background: rgba(11, 16, 33, 0.68); box-shadow: 0 20px 70px rgba(0, 0, 0, 0.32); backdrop-filter: blur(14px); transform: rotate(-4deg); }
+    .code-bar { display: flex; gap: 0.33rem; margin-bottom: 0.9rem; }
+    .code-bar i { display: block; width: 7px; height: 7px; border-radius: 50%; background: #ff7e8b; }
+    .code-bar i:nth-child(2) { background: #ffd76d; }
+    .code-bar i:nth-child(3) { background: #8ff0a4; }
+    .code-line { display: block; height: 7px; margin: 0.45rem 0; border-radius: 999px; background: linear-gradient(90deg, rgba(89, 232, 255, 0.85) 48%, transparent 48%); opacity: 0.8; }
+    .code-line:nth-child(3) { width: 72%; background: linear-gradient(90deg, rgba(169, 139, 255, 0.9) 60%, transparent 60%); }
+    .code-line:nth-child(4) { width: 87%; background: linear-gradient(90deg, rgba(255, 130, 203, 0.8) 35%, transparent 35%); }
+    .code-line:nth-child(5) { width: 52%; }
+
+    .scroll-cue { position: absolute; bottom: 1.65rem; left: 0; display: flex; align-items: center; gap: 0.65rem; color: var(--muted); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .scroll-cue::before { width: 37px; height: 1px; background: var(--cyan); content: ""; }
+
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border: 1px solid var(--line); border-radius: 1rem; overflow: hidden; background: var(--line); }
+    .stat { padding: 1.35rem clamp(1rem, 3vw, 2rem); background: rgba(12, 17, 33, 0.72); }
+    .stat-value { display: block; color: var(--text); font-size: clamp(1.65rem, 3vw, 2.5rem); line-height: 1; letter-spacing: -0.06em; font-weight: 800; }
+    .stat-label { display: block; margin-top: 0.45rem; color: var(--muted); font-size: 0.82rem; }
+
+    section { padding: 7rem 0; }
+    .section-top { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: 2.5rem; }
+    .section-kicker { margin: 0 0 0.65rem; color: var(--violet); font-size: 0.75rem; font-weight: 750; letter-spacing: 0.14em; text-transform: uppercase; }
+    h2 { max-width: 790px; margin: 0; letter-spacing: -0.052em; line-height: 1; font-size: clamp(2.2rem, 5vw, 4.3rem); }
+    .section-description { max-width: 340px; margin: 0; color: var(--muted); font-size: 0.94rem; }
+
+    .filter-row { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-bottom: 1.6rem; }
+    .filter { border: 1px solid var(--line); border-radius: 999px; padding: 0.52rem 0.82rem; color: var(--muted); background: rgba(255, 255, 255, 0.025); cursor: pointer; font-size: 0.83rem; transition: 160ms ease; }
+    .filter:hover, .filter[aria-pressed="true"] { border-color: rgba(89, 232, 255, 0.7); color: #061018; background: var(--cyan); }
+
+    .series-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1rem; }
+    .series-card { position: relative; display: flex; grid-column: span 4; min-height: 298px; flex-direction: column; justify-content: space-between; padding: 1.5rem; overflow: hidden; border: 1px solid var(--line); border-radius: 1.2rem; background: var(--surface); transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease, opacity 180ms ease; }
+    .series-card::before { position: absolute; top: -58px; right: -52px; width: 145px; height: 145px; border-radius: 50%; background: var(--card-glow, var(--cyan)); content: ""; opacity: 0.13; filter: blur(8px); transition: transform 280ms ease, opacity 280ms ease; }
+    .series-card:hover { z-index: 1; border-color: color-mix(in srgb, var(--card-glow, var(--cyan)) 60%, transparent); box-shadow: 0 20px 55px rgba(0, 0, 0, 0.25); transform: translateY(-6px); }
+    .series-card:hover::before { opacity: 0.25; transform: scale(1.23); }
+    .series-card[hidden] { display: none; }
+    .series-card--wide { grid-column: span 8; }
+    .series-card--wide .card-main { max-width: 560px; }
+    .card-top, .card-footer, .card-meta { display: flex; align-items: center; }
+    .card-top { justify-content: space-between; gap: 0.6rem; }
+    .card-number { color: color-mix(in srgb, var(--card-glow, var(--cyan)) 85%, white); font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.78rem; }
+    .tag { display: inline-flex; padding: 0.28rem 0.52rem; border: 1px solid rgba(255, 255, 255, 0.13); border-radius: 999px; color: #d7ddf8; background: rgba(255, 255, 255, 0.06); font-size: 0.7rem; }
+    .card-main { position: relative; margin-top: auto; }
+    .series-card h3 { margin: 0 0 0.72rem; letter-spacing: -0.035em; font-size: clamp(1.3rem, 2vw, 1.7rem); line-height: 1.1; }
+    .series-card p { margin: 0; color: var(--muted); font-size: 0.88rem; line-height: 1.7; }
+    .card-footer { position: relative; justify-content: space-between; gap: 1rem; margin-top: 1.5rem; }
+    .card-meta { gap: 0.35rem; color: #c5cee8; font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.74rem; }
+    .card-link { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text); font-size: 0.84rem; font-weight: 700; }
+    .card-link span { transition: transform 160ms ease; }
+    .series-card:hover .card-link span { transform: translateX(4px); }
+    .empty-state { margin: 1rem 0 0; color: var(--muted); }
+
+    .path-section { padding-top: 1.25rem; }
+    .paths { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .path { min-height: 230px; padding: 1.5rem; border: 1px solid var(--line); border-radius: 1rem; background: linear-gradient(145deg, rgba(19, 27, 50, 0.72), rgba(10, 14, 29, 0.7)); }
+    .path-index { color: var(--cyan); font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.78rem; }
+    .path h3 { margin: 2rem 0 0.6rem; font-size: 1.27rem; letter-spacing: -0.03em; }
+    .path p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+
+    .closing { padding-top: 5rem; padding-bottom: 4.5rem; }
+    .closing-panel { position: relative; overflow: hidden; padding: clamp(2rem, 7vw, 5rem); border: 1px solid rgba(144, 165, 255, 0.24); border-radius: 1.5rem; text-align: center; background: linear-gradient(135deg, rgba(37, 29, 78, 0.68), rgba(10, 37, 59, 0.73)); }
+    .closing-panel::before { position: absolute; width: 420px; height: 420px; top: -280px; left: calc(50% - 210px); border-radius: 50%; background: var(--cyan); opacity: 0.15; content: ""; filter: blur(35px); }
+    .closing-panel h2 { position: relative; max-width: 760px; margin-inline: auto; font-size: clamp(2.25rem, 5.5vw, 5rem); }
+    .closing-panel p { position: relative; max-width: 490px; margin: 1.2rem auto 2rem; color: #c4cee8; }
+
+    footer { padding: 1.7rem 0 2.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.8rem; }
+    .footer-content { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .footer-content a { color: var(--text); }
+    .back-to-top { position: fixed; z-index: 10; right: 1.4rem; bottom: 1.4rem; display: grid; width: 42px; height: 42px; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--text); background: rgba(13, 19, 36, 0.78); box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25); cursor: pointer; opacity: 0; pointer-events: none; transform: translateY(8px); transition: 180ms ease; backdrop-filter: blur(10px); }
+    .back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+
+    [data-reveal] { opacity: 0; transform: translateY(18px); transition: opacity 600ms ease, transform 600ms ease; }
+    [data-reveal].revealed { opacity: 1; transform: translateY(0); }
+    @keyframes pulse { 70% { box-shadow: 0 0 0 8px rgba(196, 255, 114, 0); } 100% { box-shadow: 0 0 0 0 rgba(196, 255, 114, 0); } }
+    @keyframes float { 50% { transform: translate(-1.5%, 2.5%) rotate(4deg); } }
+
+    @media (max-width: 860px) {
+      .nav-links { position: absolute; top: 68px; right: 1.25rem; display: none; min-width: 190px; padding: 0.65rem; border: 1px solid var(--line); border-radius: 0.8rem; background: rgba(11, 16, 31, 0.97); box-shadow: 0 17px 45px rgba(0, 0, 0, 0.3); }
+      .nav-links.open { display: grid; }
+      .nav-links a { padding: 0.55rem 0.65rem; }
+      .menu-toggle { display: inline-flex; }
+      .hero { min-height: 680px; }
+      .code-card { right: 0; bottom: 8%; }
+      .series-card, .series-card--wide { grid-column: span 6; }
+      .paths { grid-template-columns: 1fr; }
+      .path { min-height: auto; }
+      .path h3 { margin-top: 1.2rem; }
+    }
+    @media (max-width: 600px) {
+      .shell { width: min(calc(100% - 1.5rem), var(--max)); }
+      .nav { min-height: 64px; }
+      .hero { min-height: 645px; padding-top: 3.4rem; }
+      h1 { font-size: clamp(3.05rem, 17vw, 5.2rem); }
+      .hero-text { max-width: 430px; }
+      .orbit { width: 110vw; right: -39vw; top: 30%; opacity: 0.7; }
+      .code-card { bottom: 3%; width: 61vw; padding: 0.75rem 0.9rem; }
+      .scroll-cue { display: none; }
+      .stats { grid-template-columns: 1fr; }
+      .section-top { display: block; }
+      .section-description { margin-top: 1rem; }
+      section { padding: 5rem 0; }
+      .series-card, .series-card--wide { grid-column: 1 / -1; min-height: 260px; }
+      .footer-content { align-items: start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">跳到主要内容</a>
+  <header class="site-header" id="top">
+    <div class="shell nav">
+      <a class="brand" href="#top" aria-label="NEWLIFE.007 首页"><span class="brand-mark">N.</span> NEWLIFE.007</a>
+      <button class="menu-toggle" type="button" aria-label="打开导航菜单" aria-expanded="false" aria-controls="site-nav">菜单</button>
+      <nav class="nav-links" id="site-nav" aria-label="主导航">
+        <a href="#series">内容宇宙</a>
+        <a href="#paths">学习路径</a>
+        <a href="https://github.com/newlife007/ai_learning" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy" data-reveal>
+        <p class="eyebrow"><span class="pulse"></span> Systematic notes on AI &amp; engineering</p>
+        <h1 id="hero-title">把复杂世界<br /><span class="gradient-text">讲得明白一点。</span></h1>
+        <p class="hero-text">这里沉淀关于 AI、大语言模型、推荐系统与广告技术的系统化笔记。为好奇而写，为实践而学。</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#series">开始探索 <span aria-hidden="true">↓</span></a>
+          <a class="button button-secondary" href="#paths">选择学习路径 <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+      <div class="orbit" aria-hidden="true"><span class="orb orb-one"></span><span class="orb orb-two"></span></div>
+      <div class="code-card" aria-hidden="true">
+        <div class="code-bar"><i></i><i></i><i></i></div>
+        <span class="code-line"></span><span class="code-line"></span><span class="code-line"></span><span class="code-line"></span>
+      </div>
+      <div class="scroll-cue" aria-hidden="true">scroll to explore</div>
+    </section>
+
+    <div class="shell" data-reveal>
+      <section class="stats" aria-label="博客内容统计">
+        <div class="stat"><strong class="stat-value">07</strong><span class="stat-label">系统化主题系列</span></div>
+        <div class="stat"><strong class="stat-value">55+</strong><span class="stat-label">持续更新的深度内容</span></div>
+        <div class="stat"><strong class="stat-value">∞</strong><span class="stat-label">等待被解开的好奇心</span></div>
+      </section>
+    </div>
+
+    <section class="shell" id="series" aria-labelledby="series-title">
+      <div class="section-top" data-reveal>
+        <div>
+          <p class="section-kicker">01 / CONTENT UNIVERSE</p>
+          <h2 id="series-title">从一个问题，抵达一片知识星系。</h2>
+        </div>
+        <p class="section-description">按感兴趣的主题进入阅读。每个入口都会带你到对应系列的完整文章目录。</p>
+      </div>
+
+      <div class="filter-row" role="group" aria-label="按主题筛选内容系列" data-reveal>
+        <button class="filter" type="button" data-filter="all" aria-pressed="true">全部 07</button>
+        <button class="filter" type="button" data-filter="ai" aria-pressed="false">AI / LLM</button>
+        <button class="filter" type="button" data-filter="engineering" aria-pressed="false">工程实践</button>
+        <button class="filter" type="button" data-filter="business" aria-pressed="false">业务技术</button>
+      </div>
+
+      <div class="series-grid" aria-live="polite">
+        <a class="series-card series-card--wide" data-category="ai" data-reveal style="--card-glow: #59e8ff" href="https://github.com/newlife007/ai_learning/tree/main/ai-blog-for-beginners" target="_blank" rel="noopener noreferrer" aria-label="阅读 AI 小白科普系列，共 8 篇文章">
+          <div class="card-top"><span class="card-number">SERIES / 01</span><span class="tag">零基础</span></div>
+          <div class="card-main"><h3>AI 小白科普</h3><p>从“AI 是什么”到如何写好 Prompt，用不需要技术背景的语言理解人工智能与大模型。</p></div>
+          <div class="card-footer"><span class="card-meta">08 ARTICLES</span><span class="card-link">进入系列 <span aria-hidden="true">↗</span></span></div>
+        </a>
+
+        <a class="series-card" data-category="ai" data-reveal style="--card-glow: #b392ff" href="https://github.com/newlife007/ai_learning/tree/main/ai-core-deep-dive" target="_blank" rel="noopener noreferrer" aria-label="阅读 AI 核心技术深度解析，共 10 篇文章">
+          <div class="card-top"><span class="card-number">SERIES / 02</span><span class="tag">进阶</span></div>
+          <div class="card-main"><h3>AI 核心技术深度解析</h3><p>Transformer、RAG、Agent、多模态到模型对齐，梳理 LLM 的核心技术脉络。</p></div>
+          <div class="card-footer"><span class="card-meta">10 ARTICLES</span><span class="card-link">深入阅读 <span aria-hidden="true">↗</span></span></div>
+        </a>
+
+        <a class="series-card" data-category="ai engineering" data-reveal style="--card-glow: #ff91d0" href="https://github.com/newlife007/ai_learning/tree/main/llm-learning-plan" target="_blank" rel="noopener noreferrer" aria-label="阅读 LLM 3 个月学习计划，共 9 个主题">
+          <div class="card-top"><span class="card-number">SERIES / 03</span><span class="tag">路线图</span></div>
+          <div class="card-main"><h3>LLM 3 个月学习计划</h3><p>从应用开发、理论原理到训练对齐，搭建一条有节奏、可实践的学习路径。</p></div>
+          <div class="card-footer"><span class="card-meta">09 TOPICS</span><span class="card-link">开始计划 <span aria-hidden="true">↗</span></span></div>
+        </a>
+
+        <a class="series-card" data-category="ai engineering" data-reveal style="--card-glow: #c8ff7c" href="https://github.com/newlife007/ai_learning/tree/main/llm-performance-optimization" target="_blank" rel="noopener noreferrer" aria-label="阅读大模型性能优化系列，共 9 篇文章">
+          <div class="card-top"><span class="card-number">SERIES / 04</span><span class="tag">性能</span></div>
+          <div class="card-main"><h3>大模型性能优化</h3><p>从显存、训练到推理引擎，理解让大模型跑得更快、更省、更稳的工程技术。</p></div>
+          <div class="card-footer"><span class="card-meta">09 ARTICLES</span><span class="card-link">优化性能 <span aria-hidden="true">↗</span></span></div>
+        </a>
+
+        <a class="series-card" data-category="ai engineering" data-reveal style="--card-glow: #59e8ff" href="https://github.com/newlife007/ai_learning/tree/main/llm-training-data-guide" target="_blank" rel="noopener noreferrer" aria-label="阅读大模型训练数据集完全指南">
+          <div class="card-top"><span class="card-number">SERIES / 05</span><span class="tag">数据</span></div>
+          <div class="card-main"><h3>大模型训练数据指南</h3><p>从获取、清洗到构建多模态数据集，掌握决定模型能力上限的数据全流程。</p></div>
+          <div class="card-footer"><span class="card-meta">01 GUIDE</span><span class="card-link">查看指南 <span aria-hidden="true">↗</span></span></div>
+        </a>
+
+        <a class="series-card" data-category="engineering business" data-reveal style="--card-glow: #ffba70" href="https://github.com/newlife007/ai_learning/tree/main/recommendation-system" target="_blank" rel="noopener noreferrer" aria-label="阅读推荐系统系列，共 11 篇文章">
+          <div class="card-top"><span class="card-number">SERIES / 06</span><span class="tag">推荐</span></div>
+          <div class="card-main"><h3>推荐系统：从入门到实践</h3><p>从生活场景、协同过滤到工业级在线服务，理解每一次“猜你喜欢”背后的系统。</p></div>
+          <div class="card-footer"><span class="card-meta">11 ARTICLES</span><span class="card-link">探索推荐 <span aria-hidden="true">↗</span></span></div>
+        </a>
+
+        <a class="series-card series-card--wide" data-category="engineering business" data-reveal style="--card-glow: #b392ff" href="https://github.com/newlife007/ai_learning/tree/main/ad-platform-blog-series" target="_blank" rel="noopener noreferrer" aria-label="阅读广告平台系统深度解析系列，共 7 篇文章">
+          <div class="card-top"><span class="card-number">SERIES / 07</span><span class="tag">广告技术</span></div>
+          <div class="card-main"><h3>广告平台系统深度解析</h3><p>从广告平台演进、关键概念和投放架构，到竞价算法、API 对接与行业未来，建立完整的广告技术认知。</p></div>
+          <div class="card-footer"><span class="card-meta">07 ARTICLES</span><span class="card-link">进入全景 <span aria-hidden="true">↗</span></span></div>
+        </a>
+      </div>
+      <p class="empty-state" hidden>该分类暂时没有内容。</p>
+    </section>
+
+    <section class="shell path-section" id="paths" aria-labelledby="paths-title">
+      <div class="section-top" data-reveal>
+        <div>
+          <p class="section-kicker">02 / CURATED PATHS</p>
+          <h2 id="paths-title">不知道从哪开始？试试这些路径。</h2>
+        </div>
+      </div>
+      <div class="paths">
+        <article class="path" data-reveal>
+          <span class="path-index">PATH / 01</span>
+          <h3>建立 AI 直觉</h3>
+          <p>先从 AI 小白科普开始，再进入核心技术解析。适合希望读懂当前 AI 浪潮的好奇者。</p>
+        </article>
+        <article class="path" data-reveal>
+          <span class="path-index">PATH / 02</span>
+          <h3>成为 LLM 实践者</h3>
+          <p>沿着 3 个月学习计划循序推进，结合性能优化与训练数据指南，把知识变成可复用的能力。</p>
+        </article>
+        <article class="path" data-reveal>
+          <span class="path-index">PATH / 03</span>
+          <h3>理解商业系统</h3>
+          <p>从推荐系统到广告平台，走进数据、算法、服务与业务目标交汇的真实工程世界。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="shell closing" aria-labelledby="closing-title" data-reveal>
+      <div class="closing-panel">
+        <p class="section-kicker">STAY CURIOUS</p>
+        <h2 id="closing-title">下一段认知跃迁，从此刻开始。</h2>
+        <p>选择一个你真正好奇的主题，投入一小时，理解一件曾经看似复杂的事。</p>
+        <a class="button button-primary" href="#series">浏览全部系列 <span aria-hidden="true">↑</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer-content">
+      <span>© 2026 NEWLIFE.007 · Built for curious minds.</span>
+      <a href="https://github.com/newlife007/ai_learning" target="_blank" rel="noopener noreferrer">查看全部文章源文件 ↗</a>
+    </div>
+  </footer>
+  <button class="back-to-top" type="button" aria-label="回到页面顶部">↑</button>
+
+  <script>
+    const header = document.querySelector('.site-header');
+    const menuButton = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    const topButton = document.querySelector('.back-to-top');
+    const cards = [...document.querySelectorAll('.series-card')];
+    const filters = [...document.querySelectorAll('.filter')];
+    const emptyState = document.querySelector('.empty-state');
+
+    const updateChrome = () => {
+      const isScrolled = window.scrollY > 18;
+      header.classList.toggle('scrolled', isScrolled);
+      topButton.classList.toggle('visible', window.scrollY > 650);
+    };
+    updateChrome();
+    window.addEventListener('scroll', updateChrome, { passive: true });
+
+    menuButton.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+      menuButton.setAttribute('aria-label', isOpen ? '关闭导航菜单' : '打开导航菜单');
+    });
+    navLinks.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.setAttribute('aria-label', '打开导航菜单');
+    });
+
+    filters.forEach((filter) => {
+      filter.addEventListener('click', () => {
+        const selected = filter.dataset.filter;
+        let visibleCards = 0;
+        filters.forEach((item) => item.setAttribute('aria-pressed', String(item === filter)));
+        cards.forEach((card) => {
+          const visible = selected === 'all' || card.dataset.category.split(' ').includes(selected);
+          card.hidden = !visible;
+          if (visible) visibleCards += 1;
+        });
+        emptyState.hidden = visibleCards !== 0;
+      });
+    });
+
+    topButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('[data-reveal]').forEach((element) => revealObserver.observe(element));
+  </script>
+</body>
+</html>
