@@ -158,6 +158,15 @@
     .closing-panel h2 { position: relative; max-width: 760px; margin-inline: auto; font-size: clamp(2.25rem, 5.5vw, 5rem); }
     .closing-panel p { position: relative; max-width: 490px; margin: 1.2rem auto 2rem; color: #c4cee8; }
 
+    .reader-section { padding-top: 1.25rem; padding-bottom: 2.25rem; }
+    .reader-panel { overflow: hidden; border: 1px solid rgba(139, 169, 255, 0.26); border-radius: 1.25rem; background: rgba(13, 19, 37, 0.82); box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28); }
+    .reader-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.35rem; border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, 0.025); }
+    .reader-toolbar .section-kicker { margin-bottom: 0.3rem; font-size: 0.64rem; }
+    .reader-title { margin: 0; font-size: clamp(1.25rem, 2.3vw, 1.75rem); letter-spacing: -0.04em; }
+    .reader-close { flex: 0 0 auto; min-height: 38px; padding: 0.45rem 0.75rem; border: 1px solid var(--line); border-radius: 0.65rem; color: var(--text); background: rgba(255, 255, 255, 0.04); cursor: pointer; transition: 160ms ease; }
+    .reader-close:hover, .reader-close:focus-visible { border-color: rgba(89, 232, 255, 0.75); color: #07111b; background: var(--cyan); }
+    .reader-frame { display: block; width: 100%; height: min(78vh, 880px); min-height: 560px; border: 0; background: #0b1020; }
+    .reader-hint { margin: 0; padding: 0.7rem 1.35rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.76rem; }
     footer { padding: 1.7rem 0 2.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.8rem; }
     .footer-content { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
     .footer-content a { color: var(--text); }
@@ -305,6 +314,20 @@
       <p class="empty-state" hidden>该分类暂时没有内容。</p>
     </section>
 
+    <section class="shell reader-section" id="reader" aria-labelledby="reader-title" tabindex="-1" hidden>
+      <div class="reader-panel">
+        <div class="reader-toolbar">
+          <div>
+            <p class="section-kicker">NOW READING</p>
+            <h2 class="reader-title" id="reader-title">正在打开文章</h2>
+          </div>
+          <button class="reader-close" type="button" aria-label="关闭内嵌阅读器">关闭阅读器 ×</button>
+        </div>
+        <iframe class="reader-frame" id="reader-frame" title="博客文章阅读器" src="about:blank" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        <p class="reader-hint">文章将在此处以 Markdown 格式渲染；文中的本地文章链接会继续在阅读器中打开。</p>
+      </div>
+    </section>
+
     <section class="shell path-section" id="paths" aria-labelledby="paths-title">
       <div class="section-top" data-reveal>
         <div>
@@ -357,12 +380,41 @@
     const cards = [...document.querySelectorAll('.series-card')];
     const filters = [...document.querySelectorAll('.filter')];
     const emptyState = document.querySelector('.empty-state');
+    const readerSection = document.querySelector('#reader');
+    const readerFrame = document.querySelector('#reader-frame');
+    const readerTitle = document.querySelector('#reader-title');
+    const readerClose = document.querySelector('.reader-close');
+    const localDocumentPattern = /^ai_learning\/[a-zA-Z0-9_./-]+\.md$/;
 
     const updateChrome = () => {
       const isScrolled = window.scrollY > 18;
       header.classList.toggle('scrolled', isScrolled);
       topButton.classList.toggle('visible', window.scrollY > 650);
     };
+
+    const normalizeDocumentPath = (value) => {
+      const documentPath = value.replace(/^\.\//, '');
+      return localDocumentPattern.test(documentPath) && !documentPath.includes('..') ? documentPath : null;
+    };
+
+    const updateReaderUrl = (documentPath, mode = 'push') => {
+      if (!mode) return;
+      const url = new URL(window.location.href);
+      url.searchParams.set('doc', documentPath);
+      url.hash = 'reader';
+      history[`${mode}State`]({ documentPath }, '', url);
+    };
+
+    const openReader = (documentPath, title, historyMode = 'push') => {
+      const safeDocumentPath = normalizeDocumentPath(documentPath);
+      if (!safeDocumentPath) return;
+      readerTitle.textContent = title || '正在打开文章';
+      readerSection.hidden = false;
+      readerFrame.src = `reader.html?doc=${encodeURIComponent(safeDocumentPath)}`;
+      updateReaderUrl(safeDocumentPath, historyMode);
+      requestAnimationFrame(() => readerSection.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    };
+
     updateChrome();
     window.addEventListener('scroll', updateChrome, { passive: true });
 
@@ -390,6 +442,39 @@
         emptyState.hidden = visibleCards !== 0;
       });
     });
+
+    cards.forEach((card) => {
+      card.addEventListener('click', (event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const documentPath = normalizeDocumentPath(card.getAttribute('href'));
+        if (!documentPath) return;
+        event.preventDefault();
+        openReader(documentPath, card.querySelector('h3')?.textContent);
+      });
+    });
+
+    readerClose.addEventListener('click', () => {
+      readerSection.hidden = true;
+      readerFrame.src = 'about:blank';
+      const url = new URL(window.location.href);
+      url.searchParams.delete('doc');
+      url.hash = 'series';
+      history.pushState({}, '', url);
+      document.querySelector('#series').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    window.addEventListener('message', (event) => {
+      if (event.origin !== window.location.origin || event.source !== readerFrame.contentWindow || event.data?.type !== 'blog-reader-title') return;
+      readerTitle.textContent = event.data.title || '博客文章';
+      const documentPath = normalizeDocumentPath(event.data.documentPath || '');
+      if (documentPath) updateReaderUrl(documentPath, 'replace');
+    });
+
+    const initialDocumentPath = normalizeDocumentPath(new URLSearchParams(window.location.search).get('doc') || '');
+    if (initialDocumentPath) {
+      const matchingCard = cards.find((card) => normalizeDocumentPath(card.getAttribute('href')) === initialDocumentPath);
+      openReader(initialDocumentPath, matchingCard?.querySelector('h3')?.textContent, null);
+    }
 
     topButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
