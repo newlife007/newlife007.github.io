@@ -1,0 +1,3 @@
+[submodule "ai_learning"]
+	path = ai_learning
+	url = https://github.com/newlife007/ai_learning.git
