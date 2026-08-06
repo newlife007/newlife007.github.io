@@ -158,15 +158,32 @@
     .closing-panel h2 { position: relative; max-width: 760px; margin-inline: auto; font-size: clamp(2.25rem, 5.5vw, 5rem); }
     .closing-panel p { position: relative; max-width: 490px; margin: 1.2rem auto 2rem; color: #c4cee8; }
 
-    .reader-section { padding-top: 1.25rem; padding-bottom: 2.25rem; }
-    .reader-panel { overflow: hidden; border: 1px solid rgba(139, 169, 255, 0.26); border-radius: 1.25rem; background: rgba(13, 19, 37, 0.82); box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28); }
-    .reader-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.35rem; border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, 0.025); }
-    .reader-toolbar .section-kicker { margin-bottom: 0.3rem; font-size: 0.64rem; }
-    .reader-title { margin: 0; font-size: clamp(1.25rem, 2.3vw, 1.75rem); letter-spacing: -0.04em; }
-    .reader-close { flex: 0 0 auto; min-height: 38px; padding: 0.45rem 0.75rem; border: 1px solid var(--line); border-radius: 0.65rem; color: var(--text); background: rgba(255, 255, 255, 0.04); cursor: pointer; transition: 160ms ease; }
+    .reader-section { padding: 0; }
+    .reader-panel { display: grid; grid-template-columns: minmax(235px, 280px) minmax(0, 1fr); min-height: calc(100vh - 76px); overflow: hidden; border: 1px solid rgba(139, 169, 255, 0.26); border-radius: 1.25rem; background: rgba(13, 19, 37, 0.82); box-shadow: 0 26px 70px rgba(0, 0, 0, 0.28); }
+    .reader-sidebar { display: flex; min-width: 0; flex-direction: column; gap: 1.35rem; padding: 1.25rem; border-right: 1px solid var(--line); background: linear-gradient(180deg, rgba(22, 29, 54, 0.95), rgba(11, 16, 31, 0.96)); overflow-y: auto; }
+    .reader-library { display: inline-flex; align-items: center; gap: 0.45rem; align-self: flex-start; padding: 0.45rem 0.6rem; border: 1px solid var(--line); border-radius: 0.62rem; color: #dce5ff; background: rgba(255, 255, 255, 0.035); cursor: pointer; font-size: 0.78rem; transition: 160ms ease; }
+    .reader-library:hover, .reader-library:focus-visible { border-color: rgba(89, 232, 255, 0.75); color: #07111b; background: var(--cyan); }
+    .reader-sidebar-label { margin: 0; color: var(--violet); font-size: 0.66rem; font-weight: 750; letter-spacing: 0.13em; text-transform: uppercase; }
+    .reader-nav-list { display: grid; gap: 0.38rem; }
+    .reader-nav-link { display: grid; grid-template-columns: 1.85rem minmax(0, 1fr); gap: 0.6rem; align-items: center; padding: 0.65rem 0.6rem; border: 1px solid transparent; border-radius: 0.7rem; color: var(--muted); transition: 160ms ease; }
+    .reader-nav-link:hover, .reader-nav-link:focus-visible { border-color: rgba(169, 139, 255, 0.38); color: var(--text); background: rgba(169, 139, 255, 0.1); }
+    .reader-nav-link.active { border-color: rgba(89, 232, 255, 0.55); color: var(--text); background: linear-gradient(90deg, rgba(89, 232, 255, 0.14), rgba(89, 232, 255, 0.025)); }
+    .reader-nav-index { color: var(--cyan); font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.7rem; }
+    .reader-nav-name { overflow: hidden; font-size: 0.82rem; font-weight: 650; line-height: 1.3; text-overflow: ellipsis; }
+    .reader-sidebar-note { margin: auto 0 0; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.73rem; line-height: 1.6; }
+    .reader-content { display: flex; min-width: 0; min-height: 0; flex-direction: column; background: #0b1020; }
+    .reader-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem clamp(1rem, 2.5vw, 1.6rem); border-bottom: 1px solid var(--line); background: rgba(14, 20, 39, 0.94); }
+    .reader-toolbar .section-kicker { margin-bottom: 0.26rem; font-size: 0.62rem; }
+    .reader-title { overflow: hidden; max-width: 760px; margin: 0; font-size: clamp(1.08rem, 2.1vw, 1.55rem); letter-spacing: -0.04em; text-overflow: ellipsis; white-space: nowrap; }
+    .reader-close { flex: 0 0 auto; min-height: 36px; padding: 0.42rem 0.7rem; border: 1px solid var(--line); border-radius: 0.65rem; color: var(--text); background: rgba(255, 255, 255, 0.04); cursor: pointer; font-size: 0.8rem; transition: 160ms ease; }
     .reader-close:hover, .reader-close:focus-visible { border-color: rgba(89, 232, 255, 0.75); color: #07111b; background: var(--cyan); }
-    .reader-frame { display: block; width: 100%; height: min(78vh, 880px); min-height: 560px; border: 0; background: #0b1020; }
-    .reader-hint { margin: 0; padding: 0.7rem 1.35rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.76rem; }
+    .reader-frame { display: block; width: 100%; height: auto; min-height: 0; flex: 1; border: 0; background: #0b1020; }
+    .reader-hint { margin: 0; padding: 0.48rem clamp(1rem, 2.5vw, 1.6rem); border-top: 1px solid var(--line); color: var(--muted); background: rgba(14, 20, 39, 0.94); font-size: 0.72rem; }
+    body.is-reading { overflow: hidden; }
+    body.is-reading .hero, body.is-reading main > *:not(.reader-section), body.is-reading footer, body.is-reading .back-to-top { display: none; }
+    body.is-reading main { min-height: calc(100vh - 76px); }
+    body.is-reading .reader-section { display: block; width: 100%; max-width: none; }
+    body.is-reading .reader-panel { min-height: calc(100vh - 76px); border-width: 0; border-radius: 0; box-shadow: none; }
     footer { padding: 1.7rem 0 2.2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.8rem; }
     .footer-content { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
     .footer-content a { color: var(--text); }
@@ -189,6 +206,12 @@
       .paths { grid-template-columns: 1fr; }
       .path { min-height: auto; }
       .path h3 { margin-top: 1.2rem; }
+      body.is-reading .reader-panel { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); min-height: calc(100dvh - 76px); }
+      body.is-reading .reader-sidebar { gap: 0.75rem; padding: 0.85rem 1rem; border-right: 0; border-bottom: 1px solid var(--line); overflow: hidden; }
+      .reader-sidebar-label { display: none; }
+      .reader-nav-list { display: flex; gap: 0.45rem; overflow-x: auto; padding-bottom: 0.15rem; }
+      .reader-nav-link { grid-template-columns: 1.6rem minmax(0, 1fr); min-width: min(11.5rem, 58vw); flex: 0 0 min(11.5rem, 58vw); }
+      .reader-sidebar-note { display: none; }
     }
     @media (max-width: 600px) {
       .shell { width: min(calc(100% - 1.5rem), var(--max)); }
@@ -205,6 +228,12 @@
       section { padding: 5rem 0; }
       .series-card, .series-card--wide { grid-column: 1 / -1; min-height: 260px; }
       .footer-content { align-items: start; flex-direction: column; }
+      body.is-reading main { min-height: calc(100dvh - 64px); }
+      body.is-reading .reader-panel { min-height: calc(100dvh - 64px); }
+      .reader-toolbar { padding: 0.8rem 0.9rem; }
+      .reader-title { font-size: 1rem; }
+      .reader-close { padding: 0.4rem 0.55rem; font-size: 0.74rem; }
+      .reader-hint { display: none; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
@@ -316,15 +345,31 @@
 
     <section class="shell reader-section" id="reader" aria-labelledby="reader-title" tabindex="-1" hidden>
       <div class="reader-panel">
-        <div class="reader-toolbar">
-          <div>
-            <p class="section-kicker">NOW READING</p>
-            <h2 class="reader-title" id="reader-title">正在打开文章</h2>
+        <aside class="reader-sidebar" aria-label="博客系列导航">
+          <button class="reader-library" type="button"><span aria-hidden="true">←</span> 返回内容库</button>
+          <p class="reader-sidebar-label">浏览系列</p>
+          <nav class="reader-nav-list" aria-label="文章系列">
+            <a class="reader-nav-link" data-reader-link data-root="ai_learning/ai-blog-for-beginners/" href="./ai_learning/ai-blog-for-beginners/README.md"><span class="reader-nav-index">01</span><span class="reader-nav-name">AI 小白科普</span></a>
+            <a class="reader-nav-link" data-reader-link data-root="ai_learning/ai-core-deep-dive/" href="./ai_learning/ai-core-deep-dive/README.md"><span class="reader-nav-index">02</span><span class="reader-nav-name">AI 核心技术深度解析</span></a>
+            <a class="reader-nav-link" data-reader-link data-root="ai_learning/llm-learning-plan/" href="./ai_learning/llm-learning-plan/README.md"><span class="reader-nav-index">03</span><span class="reader-nav-name">LLM 3 个月学习计划</span></a>
+            <a class="reader-nav-link" data-reader-link data-root="ai_learning/llm-performance-optimization/" href="./ai_learning/llm-performance-optimization/README.md"><span class="reader-nav-index">04</span><span class="reader-nav-name">大模型性能优化</span></a>
+            <a class="reader-nav-link" data-reader-link data-root="ai_learning/llm-training-data-guide/" href="./ai_learning/llm-training-data-guide/README.md"><span class="reader-nav-index">05</span><span class="reader-nav-name">训练数据指南</span></a>
+            <a class="reader-nav-link" data-reader-link data-root="ai_learning/recommendation-system/" href="./ai_learning/recommendation-system/README.md"><span class="reader-nav-index">06</span><span class="reader-nav-name">推荐系统实践</span></a>
+            <a class="reader-nav-link" data-reader-link data-root="ai_learning/ad-platform-blog-series/" href="./ai_learning/ad-platform-blog-series/README.md"><span class="reader-nav-index">07</span><span class="reader-nav-name">广告平台深度解析</span></a>
+          </nav>
+          <p class="reader-sidebar-note">从左侧切换系列；文章内的目录链接也会保持在此阅读工作区中打开。</p>
+        </aside>
+        <div class="reader-content">
+          <div class="reader-toolbar">
+            <div>
+              <p class="section-kicker">NOW READING</p>
+              <h2 class="reader-title" id="reader-title">正在打开文章</h2>
+            </div>
+            <button class="reader-close" type="button" aria-label="关闭阅读器并返回内容库">关闭阅读器 ×</button>
           </div>
-          <button class="reader-close" type="button" aria-label="关闭内嵌阅读器">关闭阅读器 ×</button>
+          <iframe class="reader-frame" id="reader-frame" title="博客文章阅读器" src="about:blank" loading="lazy" referrerpolicy="no-referrer"></iframe>
+          <p class="reader-hint">Markdown 正在此处渲染；文中的本地文章链接会继续在右侧阅读区打开。</p>
         </div>
-        <iframe class="reader-frame" id="reader-frame" title="博客文章阅读器" src="about:blank" loading="lazy" referrerpolicy="no-referrer"></iframe>
-        <p class="reader-hint">文章将在此处以 Markdown 格式渲染；文中的本地文章链接会继续在阅读器中打开。</p>
       </div>
     </section>
 
@@ -384,6 +429,8 @@
     const readerFrame = document.querySelector('#reader-frame');
     const readerTitle = document.querySelector('#reader-title');
     const readerClose = document.querySelector('.reader-close');
+    const readerLibrary = document.querySelector('.reader-library');
+    const readerLinks = [...document.querySelectorAll('[data-reader-link]')];
     const localDocumentPattern = /^ai_learning\/[a-zA-Z0-9_./-]+\.md$/;
 
     const updateChrome = () => {
@@ -405,14 +452,45 @@
       history[`${mode}State`]({ documentPath }, '', url);
     };
 
+    const setActiveReaderLink = (documentPath) => {
+      readerLinks.forEach((link) => {
+        const isActive = documentPath.startsWith(link.dataset.root);
+        link.classList.toggle('active', isActive);
+        if (isActive) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+    };
+
+    const getReaderTitle = (documentPath) => {
+      const matchingCard = cards.find((card) => normalizeDocumentPath(card.getAttribute('href')) === documentPath);
+      const matchingLink = readerLinks.find((link) => documentPath.startsWith(link.dataset.root));
+      return matchingCard?.querySelector('h3')?.textContent || matchingLink?.querySelector('.reader-nav-name')?.textContent || '正在打开文章';
+    };
+
     const openReader = (documentPath, title, historyMode = 'push') => {
       const safeDocumentPath = normalizeDocumentPath(documentPath);
       if (!safeDocumentPath) return;
-      readerTitle.textContent = title || '正在打开文章';
+      document.body.classList.add('is-reading');
       readerSection.hidden = false;
+      readerTitle.textContent = title || getReaderTitle(safeDocumentPath);
+      setActiveReaderLink(safeDocumentPath);
       readerFrame.src = `reader.html?doc=${encodeURIComponent(safeDocumentPath)}`;
       updateReaderUrl(safeDocumentPath, historyMode);
-      requestAnimationFrame(() => readerSection.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      window.scrollTo(0, 0);
+    };
+
+    const closeReader = (historyMode = 'push') => {
+      document.body.classList.remove('is-reading');
+      readerSection.hidden = true;
+      readerFrame.src = 'about:blank';
+      readerLinks.forEach((link) => { link.classList.remove('active'); link.removeAttribute('aria-current'); });
+      if (historyMode) {
+        const url = new URL(window.location.href);
+        url.searchParams.delete('doc');
+        url.hash = 'series';
+        history[`${historyMode}State`]({}, '', url);
+      }
+      document.querySelector('#series').scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     updateChrome();
@@ -453,28 +531,37 @@
       });
     });
 
-    readerClose.addEventListener('click', () => {
-      readerSection.hidden = true;
-      readerFrame.src = 'about:blank';
-      const url = new URL(window.location.href);
-      url.searchParams.delete('doc');
-      url.hash = 'series';
-      history.pushState({}, '', url);
-      document.querySelector('#series').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    readerLinks.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const documentPath = normalizeDocumentPath(link.getAttribute('href'));
+        if (!documentPath) return;
+        event.preventDefault();
+        openReader(documentPath, link.querySelector('.reader-nav-name')?.textContent);
+      });
     });
+
+    readerClose.addEventListener('click', () => closeReader());
+    readerLibrary.addEventListener('click', () => closeReader());
 
     window.addEventListener('message', (event) => {
       if (event.origin !== window.location.origin || event.source !== readerFrame.contentWindow || event.data?.type !== 'blog-reader-title') return;
       readerTitle.textContent = event.data.title || '博客文章';
       const documentPath = normalizeDocumentPath(event.data.documentPath || '');
-      if (documentPath) updateReaderUrl(documentPath, 'replace');
+      if (documentPath) {
+        setActiveReaderLink(documentPath);
+        updateReaderUrl(documentPath, 'replace');
+      }
+    });
+
+    window.addEventListener('popstate', () => {
+      const documentPath = normalizeDocumentPath(new URLSearchParams(window.location.search).get('doc') || '');
+      if (documentPath) openReader(documentPath, getReaderTitle(documentPath), null);
+      else if (document.body.classList.contains('is-reading')) closeReader(null);
     });
 
     const initialDocumentPath = normalizeDocumentPath(new URLSearchParams(window.location.search).get('doc') || '');
-    if (initialDocumentPath) {
-      const matchingCard = cards.find((card) => normalizeDocumentPath(card.getAttribute('href')) === initialDocumentPath);
-      openReader(initialDocumentPath, matchingCard?.querySelector('h3')?.textContent, null);
-    }
+    if (initialDocumentPath) openReader(initialDocumentPath, getReaderTitle(initialDocumentPath), null);
 
     topButton.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
